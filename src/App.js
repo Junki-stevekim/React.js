@@ -12,7 +12,7 @@ class App extends Component{
   constructor(props){ //constructor 함수는 항상 컴포넌트 최상위에 위치.
     super(props); //state값을 초기화.
     this.state={
-      mode:'welcome', // 페이지 구분 , 동적페이지 생성
+      mode:'read', // 페이지 구분 , 동적페이지 생성
       subject:{title:'React',sub:'World Wide Web!'},
       welcome:{title:'Welcome',desc:'Hello React!!'},
       contents:[
@@ -33,10 +33,21 @@ class App extends Component{
     }
     return(
       <div className="App">
-        <Subject title={this.state.subject.title} 
+        {/* <Subject title={this.state.subject.title} 
         sub={this.state.subject.sub}>
 
-        </Subject>
+        </Subject> */}
+           <header>  
+          <h1><a href="/" onClick={function(e){
+            console.log(e);
+            e.preventDefault(); // 태그에 기본동작을 막는다. 즉 a태그는 페이지가 새로 렌더링되는것을 막아줌.
+            this.state.mode='welcome'; //리액트에서는 event function안의 this는 정의된값이없다. 그래서 함수가 끝난직후 bind(this)를 선언
+            this.setState({ // state값을 변경하기위해 setState선언
+              mode:'welcome'
+            });
+          }.bind(this)}>{this.state.subject.title}</a></h1>
+          {this.state.subject.sub}
+        </header>
         <TOC data={this.state.contents}></TOC>
         <Contents title={_title}  desc={_desc}></Contents>
       </div>
