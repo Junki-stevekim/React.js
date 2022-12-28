@@ -13,6 +13,7 @@ class App extends Component{
     super(props); //state값을 초기화.
     this.state={
       mode:'read', // 페이지 구분 , 동적페이지 생성
+      selected_content_id:2, //기본적으로 2번 컨텐트가 선택되게 설정.
       subject:{title:'React',sub:'World Wide Web!'},
       welcome:{title:'Welcome',desc:'Hello React!!'},
       contents:[
@@ -28,27 +29,41 @@ class App extends Component{
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
     }else if (this.state.mode === 'read'){
-      _title = this.state.contents[0].title;
-      _desc = this.state.contents[0].desc;
+      var i=0; //contente안의 id값을 반복문을 통해 선택되게 설정.
+      while(i<this.state.contents.length){
+        var data = this.state.contents[i]; //현재 데이터
+        if(data.id === this.state.selected_content_id){
+          _title = data.title;
+          _desc = data.desc;
+          break; //while문 종료
+        }
+        i= i+1; //1씩증가
+      }
+   
     }
     return(
       <div className="App">
-        {/* <Subject title={this.state.subject.title} 
+        <Subject title={this.state.subject.title} 
         sub={this.state.subject.sub}>
-
-        </Subject> */}
-           <header>  
+          onChangePage={function(){ //Component안의 event만들기 함수를 호출하도록한다.
+            this.setState({mode:'read'});
+          }.bind(this)}
+        </Subject>
+           {/* <header>  
           <h1><a href="/" onClick={function(e){
             console.log(e);
             e.preventDefault(); // 태그에 기본동작을 막는다. 즉 a태그는 페이지가 새로 렌더링되는것을 막아줌.
-            this.state.mode='welcome'; //리액트에서는 event function안의 this는 정의된값이없다. 그래서 함수가 끝난직후 bind(this)를 선언
-            this.setState({ // state값을 변경하기위해 setState선언
+            // this.state.mode='welcome'; //리액트에서는 event function안의 this는 정의된값이없다. 그래서 함수가 끝난직후 bind(this)를 선언
+            this.setState({ // state값을 변경하기위해 setState함수선언
               mode:'welcome'
             });
           }.bind(this)}>{this.state.subject.title}</a></h1>
           {this.state.subject.sub}
-        </header>
-        <TOC data={this.state.contents}></TOC>
+        </header> */}
+        <TOC onChangePage={function(id){ //event 호출 -> 함수실행
+          this.setState({mode:'read',selected_content_id:Number(id)});
+        }.bind(this)} 
+        data={this.state.contents}></TOC>
         <Contents title={_title}  desc={_desc}></Contents>
       </div>
     );
