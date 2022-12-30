@@ -2,8 +2,9 @@ import React,{Component} from 'react';
 import './App.css';
 import TOC from './components/TOC';
 import Subject from './components/Subject';
-import Contents from './components/Contents';
-
+import ReadContent from './components/ReadContent';
+import Control from './components/Control';
+import CreateContent from './components/CreateContent';
 
 // 컴포넌트 생성 코드
 // 클래스를 생성하고 render라는 Method를 가지고 컴포넌트를 생성한다.
@@ -24,10 +25,11 @@ class App extends Component{
     }
   }
   render(){ //props나 state가 새로고침되면 render함수도 새로 호출된다. 즉 다시 렌더링됨.
-    var _title,_desc=null;
+    var _title,_desc,_article=null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article= <ReadContent title={_title}  desc={_desc}></ReadContent>
     }else if (this.state.mode === 'read'){
       var i=0; //contente안의 id값을 반복문을 통해 선택되게 설정.
       while(i<this.state.contents.length){
@@ -39,15 +41,17 @@ class App extends Component{
         }
         i= i+1; //1씩증가
       }
-   
+      _article= <ReadContent title={_title}  desc={_desc}></ReadContent>
+    } else if(this.state.mode === 'create'){
+      _article= <CreateContent></CreateContent>
     }
     return(
       <div className="App">
         <Subject title={this.state.subject.title} 
-        sub={this.state.subject.sub}>
+        sub={this.state.subject.sub}
           onChangePage={function(){ //Component안의 event만들기 함수를 호출하도록한다.
-            this.setState({mode:'read'});
-          }.bind(this)}
+            this.setState({mode:'welcome'});
+          }.bind(this)}>
         </Subject>
            {/* <header>  
           <h1><a href="/" onClick={function(e){
@@ -64,7 +68,12 @@ class App extends Component{
           this.setState({mode:'read',selected_content_id:Number(id)});
         }.bind(this)} 
         data={this.state.contents}></TOC>
-        <Contents title={_title}  desc={_desc}></Contents>
+        <Control onChangeMode={function(_mode){
+          this.setState({
+            mode:_mode
+          });
+        }.bind(this)}></Control>  
+        {_article} 
       </div>
     );
   }
