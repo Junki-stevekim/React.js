@@ -12,8 +12,9 @@ import CreateContent from './components/CreateContent';
 class App extends Component{
   constructor(props){ //constructor 함수는 항상 컴포넌트 최상위에 위치.
     super(props); //state값을 초기화.
+    this.max_content_id=3;
     this.state={
-      mode:'read', // 페이지 구분 , 동적페이지 생성
+      mode:'create', // 페이지 구분 , 동적페이지 생성
       selected_content_id:2, //기본적으로 2번 컨텐트가 선택되게 설정.
       subject:{title:'React',sub:'World Wide Web!'},
       welcome:{title:'Welcome',desc:'Hello React!!'},
@@ -43,7 +44,17 @@ class App extends Component{
       }
       _article= <ReadContent title={_title}  desc={_desc}></ReadContent>
     } else if(this.state.mode === 'create'){
-      _article= <CreateContent></CreateContent>
+      _article= <CreateContent onSubmit={function(_title,_desc){
+        this.max_content_id =this.max_content_id+1;
+        
+       
+          var _contents = this.state.contents.concat(
+          {id:this.max_content_id, title:_title,desc:_desc}
+          )
+        this.setState({
+          contents:_contents
+        });
+      }.bind(this)}></CreateContent>
     }
     return(
       <div className="App">
