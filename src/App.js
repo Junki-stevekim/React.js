@@ -15,7 +15,7 @@ class App extends Component{
     super(props); //state값을 초기화.
     this.max_content_id=3;
     this.state={
-      mode:'create', // 페이지 구분 , 동적페이지 생성
+      mode:'welcome', // 페이지 구분 , 동적페이지 생성
       selected_content_id:2, //기본적으로 2번 컨텐트가 선택되게 설정.
       subject:{title:'React',sub:'World Wide Web!'},
       welcome:{title:'Welcome',desc:'Hello React!!'},
@@ -104,9 +104,29 @@ class App extends Component{
         }.bind(this)} 
         data={this.state.contents}></TOC>
         <Control onChangeMode={function(_mode){
-          this.setState({
-            mode:_mode
-          });
+          if(_mode ==='delete'){
+            if(window.confirm('정말삭제하시겠습니까?')){
+              var _contents =Array.from(this.state.contents);
+              var i= 0;
+              while(i<_contents.length){
+                if(_contents[i].id === this.state.selected_content_id){
+                  _contents.splice(i,1); //선택한 id값부터 1개를 지우겠다.
+                  break;
+                }
+                i = i +1;
+              }
+              this.setState({
+                mode:'welcome',
+                contents:_contents
+              });
+              alert('삭제되었습니다');
+            }
+          }else{
+            this.setState({
+              mode:_mode
+            });
+          }
+          
         }.bind(this)}></Control>  
         {this.getContent()} 
       </div>
